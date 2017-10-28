@@ -395,6 +395,8 @@ trait Parsing {
       case "toLowerCase" => StringOperator.`toLowerCase`
       case "toLong"      => StringOperator.`toLong`
       case "toInt"       => StringOperator.`toInt`
+      case "startsWith"       => StringOperator.`startsWith`
+      case "split"       => StringOperator.`split`
     }
 
   val numericOperationParser: Parser[Operation] =

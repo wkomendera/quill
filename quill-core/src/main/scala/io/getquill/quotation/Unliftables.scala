@@ -56,6 +56,8 @@ trait Unliftables {
     case q"$pack.BooleanOperator.`&&`"   => BooleanOperator.`&&`
     case q"$pack.BooleanOperator.`||`"   => BooleanOperator.`||`
     case q"$pack.StringOperator.`+`"     => StringOperator.`+`
+    case q"$pack.StringOperator.`startsWith`"     => StringOperator.`startsWith`
+    case q"$pack.StringOperator.`split`"     => StringOperator.`split`
     case q"$pack.NumericOperator.`-`"    => NumericOperator.`-`
     case q"$pack.NumericOperator.`+`"    => NumericOperator.`+`
     case q"$pack.NumericOperator.`*`"    => NumericOperator.`*`

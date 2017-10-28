@@ -176,6 +176,8 @@ trait SqlIdiom extends Idiom {
     case BinaryOperation(NullValue, EqualityOperator.`==`, b) => stmt"${scopedTokenizer(b)} IS NULL"
     case BinaryOperation(a, EqualityOperator.`!=`, NullValue) => stmt"${scopedTokenizer(a)} IS NOT NULL"
     case BinaryOperation(NullValue, EqualityOperator.`!=`, b) => stmt"${scopedTokenizer(b)} IS NOT NULL"
+    case BinaryOperation(a, StringOperator.`startsWith`, b)   => stmt"${scopedTokenizer(a)} LIKE (${b.token} || '%')"
+    case BinaryOperation(a, op @ StringOperator.`split`, b)   => stmt"${op.token}(${scopedTokenizer(a)}, ${scopedTokenizer(b)})"
     case BinaryOperation(a, op @ SetOperator.`contains`, b)   => SetContainsToken(scopedTokenizer(b), op.token, a.token)
     case BinaryOperation(a, op, b)                            => stmt"${scopedTokenizer(a)} ${op.token} ${scopedTokenizer(b)}"
     case e: FunctionApply                                     => fail(s"Can't translate the ast to sql: '$e'")
@@ -243,21 +245,23 @@ trait SqlIdiom extends Idiom {
   }
 
   implicit val binaryOperatorTokenizer: Tokenizer[BinaryOperator] = Tokenizer[BinaryOperator] {
-    case EqualityOperator.`==`  => stmt"="
-    case EqualityOperator.`!=`  => stmt"<>"
-    case BooleanOperator.`&&`   => stmt"AND"
-    case BooleanOperator.`||`   => stmt"OR"
-    case StringOperator.`+`     => stmt"||"
-    case NumericOperator.`-`    => stmt"-"
-    case NumericOperator.`+`    => stmt"+"
-    case NumericOperator.`*`    => stmt"*"
-    case NumericOperator.`>`    => stmt">"
-    case NumericOperator.`>=`   => stmt">="
-    case NumericOperator.`<`    => stmt"<"
-    case NumericOperator.`<=`   => stmt"<="
-    case NumericOperator.`/`    => stmt"/"
-    case NumericOperator.`%`    => stmt"%"
-    case SetOperator.`contains` => stmt"IN"
+    case EqualityOperator.`==`       => stmt"="
+    case EqualityOperator.`!=`       => stmt"<>"
+    case BooleanOperator.`&&`        => stmt"AND"
+    case BooleanOperator.`||`        => stmt"OR"
+    case StringOperator.`+`          => stmt"||"
+    case StringOperator.`startsWith` => ???
+    case StringOperator.`split`      => stmt"SPLIT"
+    case NumericOperator.`-`         => stmt"-"
+    case NumericOperator.`+`         => stmt"+"
+    case NumericOperator.`*`         => stmt"*"
+    case NumericOperator.`>`         => stmt">"
+    case NumericOperator.`>=`        => stmt">="
+    case NumericOperator.`<`         => stmt"<"
+    case NumericOperator.`<=`        => stmt"<="
+    case NumericOperator.`/`         => stmt"/"
+    case NumericOperator.`%`         => stmt"%"
+    case SetOperator.`contains`      => stmt"IN"
   }
 
   implicit def propertyTokenizer(implicit astTokenizer: Tokenizer[Ast], strategy: NamingStrategy): Tokenizer[Property] = {

@@ -57,6 +57,8 @@ trait Liftables {
     case BooleanOperator.`&&`   => q"$pack.BooleanOperator.`&&`"
     case BooleanOperator.`||`   => q"$pack.BooleanOperator.`||`"
     case StringOperator.`+`     => q"$pack.StringOperator.`+`"
+    case StringOperator.`startsWith`     => q"$pack.StringOperator.`startsWith`"
+    case StringOperator.`split`     => q"$pack.StringOperator.`split`"
     case NumericOperator.`-`    => q"$pack.NumericOperator.`-`"
     case NumericOperator.`+`    => q"$pack.NumericOperator.`+`"
     case NumericOperator.`*`    => q"$pack.NumericOperator.`*`"
