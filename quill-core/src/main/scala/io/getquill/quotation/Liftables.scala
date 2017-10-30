@@ -95,6 +95,7 @@ trait Liftables {
     case Filter(a, b, c)        => q"$pack.Filter($a, $b, $c)"
     case Map(a, b, c)           => q"$pack.Map($a, $b, $c)"
     case FlatMap(a, b, c)       => q"$pack.FlatMap($a, $b, $c)"
+    case ConcatMap(a, b, c)       => q"$pack.ConcatMap($a, $b, $c)"
     case SortBy(a, b, c, d)     => q"$pack.SortBy($a, $b, $c, $d)"
     case GroupBy(a, b, c)       => q"$pack.GroupBy($a, $b, $c)"
     case Aggregation(a, b)      => q"$pack.Aggregation($a, $b)"

@@ -33,7 +33,7 @@ case class BetaReduction(map: collection.Map[Ast, Ast])
         val newParams = params.map { p =>
           (map.get(p) match {
             case Some(i: Ident) => i
-            case _              => p
+            case _ => p
           })
         }
         Function(newParams, BetaReduction(map ++ params.zip(newParams))(body))
@@ -91,6 +91,8 @@ case class BetaReduction(map: collection.Map[Ast, Ast])
         Map(apply(a), b, BetaReduction(map - b)(c))
       case FlatMap(a, b, c) =>
         FlatMap(apply(a), b, BetaReduction(map - b)(c))
+      case ConcatMap(a, b, c) =>
+        ConcatMap(apply(a), b, BetaReduction(map - b)(c))
       case SortBy(a, b, c, d) =>
         SortBy(apply(a), b, BetaReduction(map - b)(c), d)
       case GroupBy(a, b, c) =>
