@@ -98,16 +98,27 @@ trait SqlIdiom extends Idiom {
       stmt"CASE ${conditions.mkStmt(" ")} ELSE ${e.token} END"
   }
 
+  def concatFunction = "unnest"
+
   implicit def sqlQueryTokenizer(implicit astTokenizer: Tokenizer[Ast], strategy: NamingStrategy): Tokenizer[SqlQuery] = Tokenizer[SqlQuery] {
-    case FlattenSqlQuery(from, where, groupBy, orderBy, limit, offset, select, distinct) =>
+    case FlattenSqlQuery(from, where, groupBy, orderBy, limit, offset, select, distinct, concat) =>
 
       val distinctTokenizer = (if (distinct) " DISTINCT" else "").token
 
-      val selectClause =
+      val selectValues =
         select match {
-          case Nil => stmt"SELECT$distinctTokenizer *"
-          case _   => stmt"SELECT$distinctTokenizer ${select.token}"
+          case Nil  => stmt"*"
+          case _ => select.token
         }
+      
+      val withConcat =
+        concat match {
+          case true  => stmt"${concatFunction.token}($selectValues)"
+          case false => selectValues
+        }
+
+      val selectClause =
+        stmt"SELECT$distinctTokenizer $withConcat"
 
       val withFrom =
         from match {

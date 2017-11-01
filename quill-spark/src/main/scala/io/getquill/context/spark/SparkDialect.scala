@@ -33,7 +33,7 @@ class SparkDialect extends SqlIdiom {
         case q: Query =>
           val sql = SqlQuery(q)
           trace("sql")(sql)
-          VerifySqlQuery(sql).map(fail)
+//          VerifySqlQuery(sql).map(fail)
           sql.token
         case other =>
           other.token

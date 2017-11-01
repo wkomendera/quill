@@ -14,10 +14,10 @@ case class Dealias(state: Option[Ident]) extends StatefulTransformer[Option[Iden
             (FlatMap(a, b, cn), cnt)
         }
       case ConcatMap(a, b, c) =>
-        dealias(a, b, c)(FlatMap) match {
-          case (FlatMap(a, b, c), _) =>
+        dealias(a, b, c)(ConcatMap) match {
+          case (ConcatMap(a, b, c), _) =>
             val (cn, cnt) = apply(c)
-            (FlatMap(a, b, cn), cnt)
+            (ConcatMap(a, b, cn), cnt)
         }
       case Map(a, b, c) =>
         dealias(a, b, c)(Map)

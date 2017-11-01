@@ -179,7 +179,7 @@ trait Parsing {
     case q"$source.flatMap[$t](($alias) => $body)" if (is[CoreDsl#Query[Any]](source)) =>
       FlatMap(astParser(source), identParser(alias), astParser(body))
 
-    case q"$source.concatMap[$t](($alias) => $body)" if (is[CoreDsl#Query[Any]](source)) =>
+    case q"$source.concatMap[$t, $u](($alias) => $body)($ev)" if (is[CoreDsl#Query[Any]](source)) =>
       ConcatMap(astParser(source), identParser(alias), astParser(body))
 
     case q"$source.sortBy[$t](($alias) => $body)($ord)" if (is[CoreDsl#Query[Any]](source)) =>

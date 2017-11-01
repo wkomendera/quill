@@ -50,7 +50,8 @@ case class FlattenSqlQuery(
   limit:    Option[Ast]           = None,
   offset:   Option[Ast]           = None,
   select:   List[SelectValue],
-  distinct: Boolean               = false
+  distinct: Boolean               = false,
+  concat: Boolean     = false
 )
   extends SqlQuery
 
@@ -104,6 +105,7 @@ object SqlQuery {
       q match {
         case Map(_: GroupBy, _, _) => nest(source(q, alias))
         case Nested(q)             => nest(QueryContext(apply(q), alias))
+        case q: ConcatMap             => nest(QueryContext(apply(q), alias))
         case Join(tpe, a, b, iA, iB, on) =>
           val ctx = source(q, alias)
           def aliases(ctx: FromContext): List[String] =
@@ -126,6 +128,12 @@ object SqlQuery {
 
     finalFlatMapBody match {
 
+      case ConcatMap(q, Ident(alias), p) =>
+        FlattenSqlQuery(
+            from = source(q, alias) :: Nil, 
+            select = selectValues(p), 
+            concat = true)
+      
       case Map(GroupBy(q, x @ Ident(alias), g), a, p) =>
         val b = base(q, alias)
         val criterias = groupByCriterias(g)
